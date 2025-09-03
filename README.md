@@ -1,6 +1,6 @@
 #  Spotlighter: Revisiting Prompt Tuning from a Representative Mining View
 
-This repository contains the implementation of the EMNLP2025 paper: Spotlighter: Revisiting Prompt Tuning from a Representative Mining View [[Paper]]([https://arxiv.org/abs/](https://arxiv.org/abs/2509.00905)). 
+This repository contains the implementation of the EMNLP2025 paper: Spotlighter: Revisiting Prompt Tuning from a Representative Mining View [[Paper]](https://arxiv.org/abs/2509.00905). 
  
 In this work, we propose **Spotlighter**, a lightweight token-selection framework that simultaneously enhances accuracy and efficiency in prompt tuning. Spotlighter evaluates each visual token's activation from both sample-wise and semantic-wise perspectives and ***retains only the top-scoring tokens*** for downstream prediction. A class-specific semantic memory bank of learned prototypes refines this selection, ensuring semantic representativeness and compensating for discarded features. To further prioritize informative signals, we introduce a two-level ranking mechanism that dynamically weights token–prototype interactions. The whole framework is shown in the figure below.
 ![](/framework.png "framework")
