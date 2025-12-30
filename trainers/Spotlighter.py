@@ -217,13 +217,13 @@ class PromptLearner(nn.Module):
         return prompts
 
 
-class CustomCLIP(nn.Module):    #这边是不用改的,选取典型的特点它这边k为5
+class CustomCLIP(nn.Module):    
     def __init__(self, cfg, classnames, clip_model):
         super().__init__()
-        self.prompt_learner = PromptLearner(cfg, classnames, clip_model)     #这个是不用改的
-        self.tokenized_prompts = self.prompt_learner.tokenized_prompts    #不改
-        self.image_encoder = clip_model.visual    #这个是不用改的
-        self.text_encoder = TextEncoder(clip_model)    #这个是不用改的
+        self.prompt_learner = PromptLearner(cfg, classnames, clip_model)     #
+        self.tokenized_prompts = self.prompt_learner.tokenized_prompts    #
+        self.image_encoder = clip_model.visual    #
+        self.text_encoder = TextEncoder(clip_model)    #
         self.logit_scale = clip_model.logit_scale
         self.dtype = clip_model.dtype
         
@@ -377,13 +377,13 @@ class TextMemory(nn.Module):
         self.writeTF = lambda x: x.clone()
         
     def forward(self, text_token=None, image_token=None,image_feature=None):     #image_feature是正常
-        fine_cache_feature = self.read(text_token)         #choose top-k module，像对齐名不详选择
+        fine_cache_feature = self.read(text_token)         #choose top-k module，
 
         text_cache_feature = torch.cat((text_token, fine_cache_feature), dim = -1)
         text_cache_feature = self.alpha * self.extractor(text_cache_feature) + text_token     #text_fuse_module
         image_store=image_feature.unsqueeze(1)
         image_fine_feature=self.imageread(image_feature)     #choose top-k module
-        #这边加一个多头注意力在这，作为image_fuse_modul
+        
         #print("image_fine_feature",image_token.size())
         #image_fine_feature=image_fine_feature.unsqueeze(1)    
         image_update=image_fine_feature.unsqueeze(1)
@@ -491,7 +491,7 @@ class Spotlighter(TrainerX):
             clip_model.float()
 
         print("Building custom CLIP")
-        self.model = CustomCLIP(cfg, classnames, clip_model)   #the backbone of the model    这个是要注意
+        self.model = CustomCLIP(cfg, classnames, clip_model)   #the backbone of the model    
 
         print("Building memory")
         self.memory = TextMemory(clip_model,feature_dim=512, memory_size=cfg.TRAINER.TF.MEMORY_SIZE, alpha=cfg.TRAINER.TF.ALPHA)
@@ -519,13 +519,13 @@ class Spotlighter(TrainerX):
         
         # NOTE: only give prompt_learner to the optimizer
         self.trainable_list = nn.ModuleList([])
-        self.trainable_list.append(self.model)         #这个是要注意
-        self.trainable_list.append(self.memory)        #这个是要注意
+        self.trainable_list.append(self.model)         #
+        self.trainable_list.append(self.memory)        #
         #self.trainable_list.append(self.image_memory)
         self.optim = build_optimizer(self.trainable_list, cfg.OPTIM)
         self.sched = build_lr_scheduler(self.optim, cfg.OPTIM)
 
-        self.register_model("prompt_learner", self.model, self.optim, self.sched)   #   这个是要注意
+        self.register_model("prompt_learner", self.model, self.optim, self.sched)   #  
         self.register_model("Memory", self.memory, self.optim, self.sched)
        # self.register_model("ImageMemory", self.image_memory, self.optim, self.sched)
 
@@ -556,7 +556,7 @@ class Spotlighter(TrainerX):
             self.scaler.scale(loss).backward()
             self.scaler.step(self.optim)
             self.scaler.update()
-        else:         #下面是文章的关键
+        else:         #
             text_features, image_features, logit_scale, image_fine, top_image_fine,top_top_image_fine,top_low_image_fine = self.model(image)  #top-2和top-3
             
             fine_text_features,fine_image_features, loss3 ,loss4= self.memory(text_features, image_fine,image_features)
@@ -760,7 +760,7 @@ class Spotlighter(TrainerX):
                     is_best=is_best,
                     model_name=model_name,
                 )
-            # elif "ImageMemory" in name:    #问题在于imagememory
+            # elif "ImageMemory" in name:    
             #     print("save memory item...")
             #     save_checkpoint(
             #         {
